@@ -7,70 +7,45 @@ public class ProductoDetalleDTO {
     private String descripcion;
     private Integer poderCubriente;
     private Long tipoPinturaId;
+    private Long familiaId;  // ← AGREGAR
     private List<EnvasadoDTO> envasados;
     private List<?> procesos;
 
-    // ✅ Constructor vacío (necesario para Jackson)
-    public ProductoDetalleDTO() {
-    }
+    // Constructor vacío
+    public ProductoDetalleDTO() {}
 
     // Constructor con parámetros
     public ProductoDetalleDTO(String codigo, String descripcion, Integer poderCubriente, 
-                              Long tipoPinturaId, List<EnvasadoDTO> envasados, List<?> procesos) {
+                              Long tipoPinturaId, Long familiaId,
+                              List<EnvasadoDTO> envasados, List<?> procesos) {
         this.codigo = codigo;
         this.descripcion = descripcion;
         this.poderCubriente = poderCubriente;
         this.tipoPinturaId = tipoPinturaId;
+        this.familiaId = familiaId;
         this.envasados = envasados;
         this.procesos = procesos;
     }
 
     // Getters y Setters
-    public String getCodigo() {
-        return codigo;
-    }
+    public String getCodigo() { return codigo; }
+    public void setCodigo(String codigo) { this.codigo = codigo; }
 
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
+    public Integer getPoderCubriente() { return poderCubriente; }
+    public void setPoderCubriente(Integer poderCubriente) { this.poderCubriente = poderCubriente; }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
+    public Long getTipoPinturaId() { return tipoPinturaId; }
+    public void setTipoPinturaId(Long tipoPinturaId) { this.tipoPinturaId = tipoPinturaId; }
 
-    public Integer getPoderCubriente() {
-        return poderCubriente;
-    }
+    public Long getFamiliaId() { return familiaId; }
+    public void setFamiliaId(Long familiaId) { this.familiaId = familiaId; }
 
-    public void setPoderCubriente(Integer poderCubriente) {
-        this.poderCubriente = poderCubriente;
-    }
+    public List<EnvasadoDTO> getEnvasados() { return envasados; }
+    public void setEnvasados(List<EnvasadoDTO> envasados) { this.envasados = envasados; }
 
-    public Long getTipoPinturaId() {
-        return tipoPinturaId;
-    }
-
-    public void setTipoPinturaId(Long tipoPinturaId) {
-        this.tipoPinturaId = tipoPinturaId;
-    }
-
-    public List<EnvasadoDTO> getEnvasados() {
-        return envasados;
-    }
-
-    public void setEnvasados(List<EnvasadoDTO> envasados) {
-        this.envasados = envasados;
-    }
-
-    public List<?> getProcesos() {
-        return procesos;
-    }
-
-    public void setProcesos(List<?> procesos) {
-        this.procesos = procesos;
-    }
+    public List<?> getProcesos() { return procesos; }
+    public void setProcesos(List<?> procesos) { this.procesos = procesos; }
 }
