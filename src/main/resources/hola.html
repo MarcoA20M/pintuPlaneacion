@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Buscar producto</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        input, button {
+            padding: 8px;
+            font-size: 16px;
+        }
+        .box {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Buscar producto por código</h2>
+
+<input type="text" id="codigo" placeholder="Código del producto">
+<button onclick="buscar()">Buscar</button>
+
+<div id="resultado" class="box"></div>
+
+<script>
+function buscar() {
+    const codigo = document.getElementById("codigo").value;
+    const resultado = document.getElementById("resultado");
+
+    resultado.innerHTML = "Buscando...";
+
+    fetch(`http://localhost:8080/api/productos/${codigo}`)
+        .then(res => {
+            if (!res.ok) {
+                throw new Error("Producto no encontrado");
+            }
+            return res.json();
+        })
+        .then(data => {
+            let html = `
+                <h3>${data.descripcion} (Código: ${data.id})</h3>
+
+                <h4>Envasados</h4>
+                <ul>
+            `;
+
+            data.envasados.forEach(e => {
+                html += `<li>${e.articulo}</li>`;
+            });
+
+            html += `
+                </ul>
+                <h4>Procesos</h4>
+                <ol>
+            `;
+
+            data.procesos.forEach(p => {
+                html += `<li>${p.descripcion}</li>`;
+            });
+
+            html += `</ol>`;
+
+            resultado.innerHTML = html;
+        })
+        .catch(err => {
+            resultado.innerHTML = `<span style="color:red">${err.message}</span>`;
+        });
+}
+</script>
+
+</body>
+</html>
