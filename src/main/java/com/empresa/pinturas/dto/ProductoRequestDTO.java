@@ -7,49 +7,33 @@ public class ProductoRequestDTO {
     private String descripcion;
     private Integer poderCubriente;
     private Long tipoPinturaId;
-    private List<EnvasadoRequestDTO> envasados;  // ← Agrega este campo
+    private Long familiaId;
+    private String color;  // ← AGREGAR
+    private List<EnvasadoRequestDTO> envasados;
 
     // Constructor vacío
     public ProductoRequestDTO() {}
 
     // Getters y Setters
-    public String getCodigo() {
-        return codigo;
-    }
+    public String getCodigo() { return codigo; }
+    public void setCodigo(String codigo) { this.codigo = codigo; }
 
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
-    }
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
+    public Integer getPoderCubriente() { return poderCubriente; }
+    public void setPoderCubriente(Integer poderCubriente) { this.poderCubriente = poderCubriente; }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
+    public Long getTipoPinturaId() { return tipoPinturaId; }
+    public void setTipoPinturaId(Long tipoPinturaId) { this.tipoPinturaId = tipoPinturaId; }
 
-    public Integer getPoderCubriente() {
-        return poderCubriente;
-    }
+    public Long getFamiliaId() { return familiaId; }
+    public void setFamiliaId(Long familiaId) { this.familiaId = familiaId; }
 
-    public void setPoderCubriente(Integer poderCubriente) {
-        this.poderCubriente = poderCubriente;
-    }
+    // ✅ GETTER Y SETTER PARA COLOR
+    public String getColor() { return color; }
+    public void setColor(String color) { this.color = color; }
 
-    public Long getTipoPinturaId() {
-        return tipoPinturaId;
-    }
-
-    public void setTipoPinturaId(Long tipoPinturaId) {
-        this.tipoPinturaId = tipoPinturaId;
-    }
-
-    public List<EnvasadoRequestDTO> getEnvasados() {
-        return envasados;
-    }
-
-    public void setEnvasados(List<EnvasadoRequestDTO> envasados) {
-        this.envasados = envasados;
-    }
+    public List<EnvasadoRequestDTO> getEnvasados() { return envasados; }
+    public void setEnvasados(List<EnvasadoRequestDTO> envasados) { this.envasados = envasados; }
 }

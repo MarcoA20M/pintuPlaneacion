@@ -18,10 +18,12 @@ public class Producto {
     @JoinColumn(name = "tipo_pintura_id")
     private TipoPintura tipoPintura;
 
-    // 🔹 ESTA RELACIÓN FALTABA
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "familia_id")
     private Familia familia;
+
+    // ✅ AGREGAR CAMPO COLOR
+    private String color;
 
     public Producto() {}
 
@@ -40,4 +42,8 @@ public class Producto {
 
     public Familia getFamilia() { return familia; }
     public void setFamilia(Familia familia) { this.familia = familia; }
+
+    // ✅ GETTER Y SETTER PARA COLOR
+    public String getColor() { return color; }
+    public void setColor(String color) { this.color = color; }
 }

@@ -16,6 +16,6 @@ public interface ProductoService {
     // ✅ Crear producto
     ProductoDetalleDTO crearProducto(ProductoRequestDTO request);
 
-    // ✅ Actualizar producto - versión simplificada (solo recibe el request)
-    ProductoDetalleDTO actualizarProducto(ProductoRequestDTO request);
+     // ✅ Actualizar producto (recibe código actual y el request con el nuevo código)
+    ProductoDetalleDTO actualizarProducto(String codigoActual, ProductoRequestDTO request);
 }
