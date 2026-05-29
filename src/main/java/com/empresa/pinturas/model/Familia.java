@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Column;
 
 @Entity
 @Table(name = "familias")
@@ -14,15 +15,24 @@ public class Familia {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String nombre;
+    
+    @Column(name = "imagen_url", nullable = true)
+    private String imagenUrl;
 
     // 🔴 OBLIGATORIO
     public Familia() {
     }
 
-    // (opcional pero recomendado)
+    // ========== GETTERS Y SETTERS ==========
+    
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNombre() {
@@ -31,5 +41,13 @@ public class Familia {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+    
+    public String getImagenUrl() {
+        return imagenUrl;
+    }
+    
+    public void setImagenUrl(String imagenUrl) {
+        this.imagenUrl = imagenUrl;
     }
 }
