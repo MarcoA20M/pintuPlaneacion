@@ -7,22 +7,24 @@ public class ProductoDetalleDTO {
     private String descripcion;
     private Integer poderCubriente;
     private Long tipoPinturaId;
-    private Long familiaId;  // ← AGREGAR
+    private Long familiaId;
+    private String color;  // ← AGREGAR color
     private List<EnvasadoDTO> envasados;
-    private List<?> procesos;
+    private List<ProcesoDTO> procesos;  // ← Cambiar List<?> a List<ProcesoDTO>
 
     // Constructor vacío
     public ProductoDetalleDTO() {}
 
     // Constructor con parámetros
     public ProductoDetalleDTO(String codigo, String descripcion, Integer poderCubriente, 
-                              Long tipoPinturaId, Long familiaId,
-                              List<EnvasadoDTO> envasados, List<?> procesos) {
+                              Long tipoPinturaId, Long familiaId, String color,
+                              List<EnvasadoDTO> envasados, List<ProcesoDTO> procesos) {
         this.codigo = codigo;
         this.descripcion = descripcion;
         this.poderCubriente = poderCubriente;
         this.tipoPinturaId = tipoPinturaId;
         this.familiaId = familiaId;
+        this.color = color;
         this.envasados = envasados;
         this.procesos = procesos;
     }
@@ -43,9 +45,12 @@ public class ProductoDetalleDTO {
     public Long getFamiliaId() { return familiaId; }
     public void setFamiliaId(Long familiaId) { this.familiaId = familiaId; }
 
+    public String getColor() { return color; }
+    public void setColor(String color) { this.color = color; }
+
     public List<EnvasadoDTO> getEnvasados() { return envasados; }
     public void setEnvasados(List<EnvasadoDTO> envasados) { this.envasados = envasados; }
 
-    public List<?> getProcesos() { return procesos; }
-    public void setProcesos(List<?> procesos) { this.procesos = procesos; }
+    public List<ProcesoDTO> getProcesos() { return procesos; }
+    public void setProcesos(List<ProcesoDTO> procesos) { this.procesos = procesos; }
 }

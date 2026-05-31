@@ -1,6 +1,8 @@
 package com.empresa.pinturas.model;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "productos")
@@ -22,8 +24,11 @@ public class Producto {
     @JoinColumn(name = "familia_id")
     private Familia familia;
 
-    // ✅ AGREGAR CAMPO COLOR
     private String color;
+
+    // 🔴 NUEVO: Relación con Procesos
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<Proceso> procesos = new ArrayList<>();
 
     public Producto() {}
 
@@ -43,7 +48,10 @@ public class Producto {
     public Familia getFamilia() { return familia; }
     public void setFamilia(Familia familia) { this.familia = familia; }
 
-    // ✅ GETTER Y SETTER PARA COLOR
     public String getColor() { return color; }
     public void setColor(String color) { this.color = color; }
+
+    // 🔴 NUEVO: Getters y Setters para procesos
+    public List<Proceso> getProcesos() { return procesos; }
+    public void setProcesos(List<Proceso> procesos) { this.procesos = procesos; }
 }
