@@ -9,12 +9,10 @@ import java.util.List;
 
 public interface FamiliaRepository extends JpaRepository<Familia, Long> {
 
-    @Query("""
-        SELECT DISTINCT f
-        FROM Familia f
-        JOIN Producto p ON p.familia = f
-        JOIN p.tipoPintura t
-        WHERE LOWER(t.nombre) = LOWER(:tipo)
-    """)
+    // 🔴 NUEVA CONSULTA - Buscar directamente por el campo 'tipo' de la familia
+    @Query("SELECT f FROM Familia f WHERE LOWER(f.tipo) = LOWER(:tipo)")
     List<Familia> findByTipo(@Param("tipo") String tipo);
+
+    // Buscar familias por nombre (ignorando mayúsculas/minúsculas)
+    List<Familia> findByNombreContainingIgnoreCase(String nombre);
 }

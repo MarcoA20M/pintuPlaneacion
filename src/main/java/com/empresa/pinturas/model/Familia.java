@@ -12,21 +12,30 @@ import jakarta.persistence.Column;
 public class Familia {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Cambiar a IDENTITY
     private Long id;
 
     @Column(nullable = false)
     private String nombre;
-    
+
+    @Column(name = "tipo", nullable = false)
+    private String tipo; // "vinilica" o "esmalte"
+
     @Column(name = "imagen_url", nullable = true)
     private String imagenUrl;
 
-    // 🔴 OBLIGATORIO
+    // 🔴 CONSTRUCTOR VACÍO OBLIGATORIO
     public Familia() {
     }
 
+    // Constructor con parámetros (opcional)
+    public Familia(String nombre, String tipo) {
+        this.nombre = nombre;
+        this.tipo = tipo;
+    }
+
     // ========== GETTERS Y SETTERS ==========
-    
+
     public Long getId() {
         return id;
     }
@@ -42,11 +51,19 @@ public class Familia {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-    
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
     public String getImagenUrl() {
         return imagenUrl;
     }
-    
+
     public void setImagenUrl(String imagenUrl) {
         this.imagenUrl = imagenUrl;
     }
