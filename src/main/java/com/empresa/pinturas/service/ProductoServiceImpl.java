@@ -17,20 +17,20 @@ public class ProductoServiceImpl implements ProductoService {
     private final ProcesoRepositorio procesoRepo;
     private final TipoPinturaRepositorio tipoPinturaRepo;
     private final FamiliaRepository familiaRepo;
-    private final EnvasadoRepositorio envasadoRepo;  // ← AGREGADO
+    private final EnvasadoRepositorio envasadoRepo;
 
     public ProductoServiceImpl(ProductoRepositorio productoRepo,
                                ProductoEnvasadoRepositorio productoEnvasadoRepo,
                                ProcesoRepositorio procesoRepo,
                                TipoPinturaRepositorio tipoPinturaRepo,
                                FamiliaRepository familiaRepo,
-                               EnvasadoRepositorio envasadoRepo) {  // ← AGREGADO
+                               EnvasadoRepositorio envasadoRepo) {
         this.productoRepo = productoRepo;
         this.productoEnvasadoRepo = productoEnvasadoRepo;
         this.procesoRepo = procesoRepo;
         this.tipoPinturaRepo = tipoPinturaRepo;
         this.familiaRepo = familiaRepo;
-        this.envasadoRepo = envasadoRepo;  // ← AGREGADO
+        this.envasadoRepo = envasadoRepo;
     }
 
     // ========== MÉTODOS GET ==========
@@ -131,7 +131,18 @@ public class ProductoServiceImpl implements ProductoService {
                 productoEnvasadoRepo.save(nuevoPE);
             }
 
+            // Copiar procesos
+            List<Proceso> procesosActuales = procesoRepo.findByProducto_IdOrderByPaso(codigoActual);
+            for (Proceso proc : procesosActuales) {
+                Proceso nuevoProceso = new Proceso();
+                nuevoProceso.setPaso(proc.getPaso());
+                nuevoProceso.setDescripcion(proc.getDescripcion());
+                nuevoProceso.setProducto(nuevoProducto);
+                procesoRepo.save(nuevoProceso);
+            }
+
             productoEnvasadoRepo.deleteByProductoId(codigoActual);
+            procesoRepo.deleteByProductoId(codigoActual);
             productoRepo.deleteById(codigoActual);
             
             return mapToDetalleDTO(nuevoProducto);
@@ -141,13 +152,14 @@ public class ProductoServiceImpl implements ProductoService {
         }
     }
 
-    // ========== MÉTODO PRIVADO PARA GUARDAR (CON ENVASADOS) ==========
+    // ========== MÉTODO PRIVADO PARA GUARDAR (CON ENVASADOS Y PROCESOS) ==========
 
     private ProductoDetalleDTO guardarProducto(ProductoRequestDTO request) {
         System.out.println("========== GUARDAR PRODUCTO ==========");
         System.out.println("📌 Código: " + request.getCodigo());
         System.out.println("📌 Color: " + request.getColor());
         System.out.println("📌 Envasados recibidos: " + (request.getEnvasados() != null ? request.getEnvasados().size() : 0));
+        System.out.println("📌 Procesos recibidos: " + (request.getProcesos() != null ? request.getProcesos().size() : 0));
 
         Producto producto = productoRepo.findById(request.getCodigo())
                 .orElse(new Producto());
@@ -156,7 +168,7 @@ public class ProductoServiceImpl implements ProductoService {
         producto.setDescripcion(request.getDescripcion());
         producto.setPoderCubriente(request.getPoderCubriente());
         
-        // ✅ ASIGNAR COLOR
+        // Asignar color
         if (request.getColor() != null && !request.getColor().isEmpty()) {
             producto.setColor(request.getColor());
         } else {
@@ -178,18 +190,15 @@ public class ProductoServiceImpl implements ProductoService {
         Producto saved = productoRepo.save(producto);
         System.out.println("✅ Producto guardado: " + saved.getId());
         
-        // ✅ MANEJAR ENVASADOS
-        // Eliminar envasados existentes (para actualización)
+        // ========== MANEJAR ENVASADOS ==========
         productoEnvasadoRepo.deleteByProductoId(saved.getId());
         
-        // Crear nuevos envasados
         if (request.getEnvasados() != null && !request.getEnvasados().isEmpty()) {
             System.out.println("📦 Creando " + request.getEnvasados().size() + " envasados...");
             
             for (var envRequest : request.getEnvasados()) {
                 System.out.println("   - EnvasadoId: " + envRequest.getEnvasadoId() + ", Articulo: " + envRequest.getArticulo());
                 
-                // Buscar el Envasado por ID
                 Envasado envasado = envasadoRepo.findById(envRequest.getEnvasadoId())
                         .orElseThrow(() -> new RuntimeException("Envasado no encontrado: " + envRequest.getEnvasadoId()));
                 
@@ -206,6 +215,29 @@ public class ProductoServiceImpl implements ProductoService {
             System.out.println("⚠️ No se recibieron envasados en el request");
         }
 
+        // ========== 🔴 NUEVO: MANEJAR PROCESOS ==========
+        // Eliminar procesos existentes (para actualización)
+        procesoRepo.deleteByProductoId(saved.getId());
+        
+        // Crear nuevos procesos
+        if (request.getProcesos() != null && !request.getProcesos().isEmpty()) {
+            System.out.println("⚙️ Creando " + request.getProcesos().size() + " procesos...");
+            
+            for (ProcesoDTO procDTO : request.getProcesos()) {
+                System.out.println("   - Paso: " + procDTO.getPaso() + ", Descripción: " + procDTO.getDescripcion());
+                
+                Proceso proceso = new Proceso();
+                proceso.setPaso(procDTO.getPaso());
+                proceso.setDescripcion(procDTO.getDescripcion());
+                proceso.setProducto(saved);
+                
+                procesoRepo.save(proceso);
+            }
+            System.out.println("✅ Procesos guardados correctamente");
+        } else {
+            System.out.println("⚠️ No se recibieron procesos en el request");
+        }
+
         return mapToDetalleDTO(saved);
     }
 
@@ -220,10 +252,12 @@ public class ProductoServiceImpl implements ProductoService {
                         pe.getArticulo()))
                 .collect(Collectors.toList());
 
+        // 🔴 NUEVO: Cargar procesos
         List<ProcesoDTO> procesos = procesoRepo
                 .findByProducto_IdOrderByPaso(producto.getId())
                 .stream()
                 .map(p -> new ProcesoDTO(
+                        p.getId(),
                         p.getPaso(),
                         p.getDescripcion()))
                 .collect(Collectors.toList());
@@ -242,6 +276,7 @@ public class ProductoServiceImpl implements ProductoService {
                 producto.getPoderCubriente(),
                 tipoId,
                 familiaId,
+                producto.getColor(),  // 🔴 NUEVO: Color
                 envasados,
                 procesos);
     }

@@ -8,11 +8,9 @@ public class ProductoRequestDTO {
     private Integer poderCubriente;
     private Long tipoPinturaId;
     private Long familiaId;
-    private String color;  // ← AGREGAR
+    private String color;
     private List<EnvasadoRequestDTO> envasados;
-
-    // Constructor vacío
-    public ProductoRequestDTO() {}
+    private List<ProcesoDTO> procesos;  // ← NUEVO
 
     // Getters y Setters
     public String getCodigo() { return codigo; }
@@ -30,10 +28,12 @@ public class ProductoRequestDTO {
     public Long getFamiliaId() { return familiaId; }
     public void setFamiliaId(Long familiaId) { this.familiaId = familiaId; }
 
-    // ✅ GETTER Y SETTER PARA COLOR
     public String getColor() { return color; }
     public void setColor(String color) { this.color = color; }
 
     public List<EnvasadoRequestDTO> getEnvasados() { return envasados; }
     public void setEnvasados(List<EnvasadoRequestDTO> envasados) { this.envasados = envasados; }
+
+    public List<ProcesoDTO> getProcesos() { return procesos; }
+    public void setProcesos(List<ProcesoDTO> procesos) { this.procesos = procesos; }
 }
