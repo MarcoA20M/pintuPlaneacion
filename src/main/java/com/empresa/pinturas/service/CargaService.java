@@ -87,18 +87,20 @@ public class CargaService {
 
     // --- MÉTODOS AUXILIARES ---
 
-    private CargaResponseDTO mapToResponseDTO(Carga c) {
-        return new CargaResponseDTO(
-                c.getId(),
-                c.getProducto().getId(),
-                c.getEnvasado().getId(),
-                c.getLitros(),
-                c.getFolio(),
-                c.getCantidad(),
-                c.getFolioHija()
-                // Si tu DTO soporta operario/maquina, agrégalos aquí
-        );
-    }
+private CargaResponseDTO mapToResponseDTO(Carga c) {
+    return new CargaResponseDTO(
+        c.getId(),
+        c.getProducto().getId().toString(),  // producto como String
+        c.getEnvasado().getId(),
+        c.getLitros(),
+        c.getFolio(),
+        c.getCantidad(),
+        c.getFolioHija(),
+        c.getOperario(),    // ← IMPORTANTE: incluir operario
+        c.getMaquina(),      // ← IMPORTANTE: incluir maquina
+        c.getTipo()          // ← incluir tipo
+    );
+}
 
     private int calcularSiguienteConsecutivo(String tipo) {
         LocalDateTime inicio = LocalDate.now().atStartOfDay();

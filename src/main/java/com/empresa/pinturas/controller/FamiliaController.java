@@ -275,4 +275,44 @@ public FamiliaController(FamiliaRepository familiaRepository) {
         }
         return false;
     }
+
+// ========== CREAR NUEVA FAMILIA ==========
+
+@PostMapping
+public ResponseEntity<?> crearFamilia(@RequestBody Familia familia) {
+    try {
+        if (familia.getNombre() == null || familia.getNombre().trim().isEmpty()) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "El nombre de la familia no puede estar vacío");
+            return ResponseEntity.badRequest().body(error);
+        }
+        
+        String tipo = familia.getTipo();
+        if (tipo == null || (!tipo.equals("vinilica") && !tipo.equals("esmalte"))) {
+            // Si no viene tipo, asignar por defecto
+            familia.setTipo("vinilica");
+        }
+        
+        Familia nuevaFamilia = new Familia();
+        nuevaFamilia.setNombre(familia.getNombre());
+        nuevaFamilia.setTipo(familia.getTipo());
+        
+        Familia guardada = familiaRepository.save(nuevaFamilia);
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("message", "Familia creada correctamente");
+        response.put("id", guardada.getId());
+        response.put("nombre", guardada.getNombre());
+        response.put("tipo", guardada.getTipo());
+        
+        return ResponseEntity.ok(response);
+        
+    } catch (Exception e) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Error al crear la familia: " + e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
+}
+    
 }
