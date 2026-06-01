@@ -13,9 +13,10 @@ public interface ProductoService {
 
     List<ProductoDetalleDTO> buscarPorFamiliaYTipo(Long familiaId, String tipo);
 
-    // ✅ Crear producto
     ProductoDetalleDTO crearProducto(ProductoRequestDTO request);
 
-     // ✅ Actualizar producto (recibe código actual y el request con el nuevo código)
     ProductoDetalleDTO actualizarProducto(String codigoActual, ProductoRequestDTO request);
+
+    // 🔴 SOLO DECLARACIÓN, sin cuerpo
+    List<ProductoDetalleDTO> listarTodos();
 }

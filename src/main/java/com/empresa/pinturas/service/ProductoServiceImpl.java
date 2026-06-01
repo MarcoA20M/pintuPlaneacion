@@ -152,6 +152,13 @@ public class ProductoServiceImpl implements ProductoService {
         }
     }
 
+
+    @Override
+public List<ProductoDetalleDTO> listarTodos() {
+    return productoRepo.findAll().stream()
+            .map(this::mapToDetalleDTO)
+            .collect(Collectors.toList());
+}
     // ========== MÉTODO PRIVADO PARA GUARDAR (CON ENVASADOS Y PROCESOS) ==========
 
     private ProductoDetalleDTO guardarProducto(ProductoRequestDTO request) {

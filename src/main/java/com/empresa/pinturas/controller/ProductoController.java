@@ -22,6 +22,12 @@ public class ProductoController {
         this.service = service;
     }
 
+    // 🔴 NUEVO: Listar todos los productos
+    @GetMapping
+    public ResponseEntity<List<ProductoDetalleDTO>> listarTodos() {
+        return ResponseEntity.ok(service.listarTodos());
+    }
+
     @GetMapping("/{codigo}")
     public ProductoDetalleDTO buscarPorCodigo(@PathVariable String codigo) {
         return service.buscarPorCodigo(codigo);
@@ -40,7 +46,7 @@ public class ProductoController {
         return service.buscarPorFamiliaYTipo(familiaId, tipo);
     }
 
-    // ✅ POST - Crear nuevo producto
+    // POST - Crear nuevo producto
     @PostMapping
     public ResponseEntity<?> crearProducto(@RequestBody ProductoRequestDTO request) {
         try {
@@ -52,24 +58,23 @@ public class ProductoController {
         }
     }
 
-    // ✅ PUT - Actualizar producto (PERMITE CAMBIAR EL CÓDIGO)
-    // ELIMINA el método duplicado - solo debe haber UNO
+    // PUT - Actualizar producto
     @PutMapping("/{codigoActual}")
-public ResponseEntity<?> actualizarProducto(
-        @PathVariable String codigoActual,
-        @RequestBody ProductoRequestDTO request) {
-    try {
-        System.out.println("========== CONTROLLER PUT ==========");
-        System.out.println("📌 Path variable codigoActual: " + codigoActual);
-        System.out.println("📌 Request body codigo: " + request.getCodigo());
-        
-        ProductoDetalleDTO resultado = service.actualizarProducto(codigoActual, request);
-        return ResponseEntity.ok(resultado);
-    } catch (Exception e) {
-        System.err.println("❌ Error en controller: " + e.getMessage());
-        e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(Map.of("error", e.getMessage()));
+    public ResponseEntity<?> actualizarProducto(
+            @PathVariable String codigoActual,
+            @RequestBody ProductoRequestDTO request) {
+        try {
+            System.out.println("========== CONTROLLER PUT ==========");
+            System.out.println("📌 Path variable codigoActual: " + codigoActual);
+            System.out.println("📌 Request body codigo: " + request.getCodigo());
+            
+            ProductoDetalleDTO resultado = service.actualizarProducto(codigoActual, request);
+            return ResponseEntity.ok(resultado);
+        } catch (Exception e) {
+            System.err.println("❌ Error en controller: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", e.getMessage()));
+        }
     }
-}
 }
