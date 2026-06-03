@@ -22,4 +22,6 @@ public interface MateriaPrimaRepository extends JpaRepository<MateriaPrima, Long
     
     @Query("SELECT m FROM MateriaPrima m ORDER BY (m.nivelActual / m.capacidadMaxima) ASC")
     List<MateriaPrima> findAllOrderByPorcentajeAsc();
+
+        
 }

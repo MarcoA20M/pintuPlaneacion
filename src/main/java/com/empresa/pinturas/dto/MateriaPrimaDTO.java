@@ -1,4 +1,4 @@
-// MateriaPrimaDTO.java
+// MateriaPrimaDTO.java - Actualizado con costoPorUnidad
 package com.empresa.pinturas.dto;
 
 public class MateriaPrimaDTO {
@@ -11,6 +11,7 @@ public class MateriaPrimaDTO {
     private String unidad;
     private Double umbralCritico;
     private Double umbralAlerta;
+    private Double costoPorUnidad;  // 🔴 AGREGAR ESTE CAMPO
     private Double porcentajeLlenado;
     private Boolean critico;
     private Boolean alerta;
@@ -19,10 +20,11 @@ public class MateriaPrimaDTO {
     // Constructor vacío
     public MateriaPrimaDTO() {}
 
-    // Constructor completo
+    // Constructor completo (actualizar si quieres incluir costoPorUnidad)
     public MateriaPrimaDTO(Long id, String nombre, String tipo, String codigo, 
                            Double capacidadMaxima, Double nivelActual, String unidad,
-                           Double umbralCritico, Double umbralAlerta, String ubicacion) {
+                           Double umbralCritico, Double umbralAlerta, 
+                           Double costoPorUnidad, String ubicacion) {  // 🔴 AGREGAR costoPorUnidad
         this.id = id;
         this.nombre = nombre;
         this.tipo = tipo;
@@ -32,6 +34,7 @@ public class MateriaPrimaDTO {
         this.unidad = unidad;
         this.umbralCritico = umbralCritico;
         this.umbralAlerta = umbralAlerta;
+        this.costoPorUnidad = costoPorUnidad;  // 🔴 AGREGAR
         this.ubicacion = ubicacion;
     }
 
@@ -63,6 +66,9 @@ public class MateriaPrimaDTO {
     public Double getUmbralAlerta() { return umbralAlerta; }
     public void setUmbralAlerta(Double umbralAlerta) { this.umbralAlerta = umbralAlerta; }
 
+    public Double getCostoPorUnidad() { return costoPorUnidad; }  // 🔴 AGREGAR GETTER
+    public void setCostoPorUnidad(Double costoPorUnidad) { this.costoPorUnidad = costoPorUnidad; }  // 🔴 AGREGAR SETTER
+
     public Double getPorcentajeLlenado() { return porcentajeLlenado; }
     public void setPorcentajeLlenado(Double porcentajeLlenado) { this.porcentajeLlenado = porcentajeLlenado; }
 
@@ -75,4 +81,3 @@ public class MateriaPrimaDTO {
     public String getUbicacion() { return ubicacion; }
     public void setUbicacion(String ubicacion) { this.ubicacion = ubicacion; }
 }
-

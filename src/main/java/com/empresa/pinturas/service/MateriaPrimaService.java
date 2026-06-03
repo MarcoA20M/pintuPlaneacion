@@ -19,7 +19,7 @@ public class MateriaPrimaService {
     private final MovimientoInventarioRepository movimientoRepo;
 
     public MateriaPrimaService(MateriaPrimaRepository materiaPrimaRepo,
-                               MovimientoInventarioRepository movimientoRepo) {
+            MovimientoInventarioRepository movimientoRepo) {
         this.materiaPrimaRepo = materiaPrimaRepo;
         this.movimientoRepo = movimientoRepo;
     }
@@ -53,46 +53,44 @@ public class MateriaPrimaService {
     }
 
     // Obtener resumen para dashboard
-// Obtener resumen para dashboard - CORREGIDO
-public Map<String, Object> getResumenDashboard() {
-    long totalTanques = materiaPrimaRepo.count();
-    long criticos = materiaPrimaRepo.findCriticos().size();
-    long alerta = materiaPrimaRepo.findEnAlerta().size();
-    
-    return java.util.Map.of(
-        "totalTanques", totalTanques,
-        "criticos", criticos,
-        "alerta", alerta,
-        "normales", totalTanques - criticos - alerta
-    );
-}
+    // Obtener resumen para dashboard - CORREGIDO
+    public Map<String, Object> getResumenDashboard() {
+        long totalTanques = materiaPrimaRepo.count();
+        long criticos = materiaPrimaRepo.findCriticos().size();
+        long alerta = materiaPrimaRepo.findEnAlerta().size();
+
+        return java.util.Map.of(
+                "totalTanques", totalTanques,
+                "criticos", criticos,
+                "alerta", alerta,
+                "normales", totalTanques - criticos - alerta);
+    }
 
     // Registrar compra
     @Transactional
     public MateriaPrimaDTO registrarCompra(RegistrarCompraDTO dto) {
         MateriaPrima mp = materiaPrimaRepo.findById(dto.getMateriaPrimaId())
                 .orElseThrow(() -> new RuntimeException("Materia prima no encontrada"));
-        
+
         Double cantidadAntes = mp.getNivelActual();
         Double cantidadDespues = cantidadAntes + dto.getCantidad();
-        
+
         // Actualizar nivel
         mp.setNivelActual(cantidadDespues);
         materiaPrimaRepo.save(mp);
-        
+
         // Registrar movimiento
         MovimientoInventario movimiento = new MovimientoInventario(
-            mp,
-            MovimientoInventario.TipoMovimiento.COMPRA,
-            dto.getCantidad(),
-            cantidadAntes,
-            cantidadDespues,
-            dto.getDocumentoReferencia(),
-            dto.getUsuario()
-        );
+                mp,
+                MovimientoInventario.TipoMovimiento.COMPRA,
+                dto.getCantidad(),
+                cantidadAntes,
+                cantidadDespues,
+                dto.getDocumentoReferencia(),
+                dto.getUsuario());
         movimiento.setObservaciones(dto.getObservaciones());
         movimientoRepo.save(movimiento);
-        
+
         return convertToDTO(mp);
     }
 
@@ -125,4 +123,77 @@ public Map<String, Object> getResumenDashboard() {
         dto.setAlerta(mp.isAlerta());
         return dto;
     }
+
+    // En MateriaPrimaService.java - Agregar este método
+
+    // Crear nueva materia prima
+    @Transactional
+    public MateriaPrimaDTO crearMateriaPrima(MateriaPrimaDTO dto) {
+        // Validar que no exista una materia prima con el mismo código
+        if (materiaPrimaRepo.findByCodigo(dto.getCodigo()).isPresent()) {
+            throw new RuntimeException("Ya existe una materia prima con el código: " + dto.getCodigo());
+        }
+
+        MateriaPrima mp = new MateriaPrima();
+        mp.setCodigo(dto.getCodigo());
+        mp.setNombre(dto.getNombre());
+        mp.setTipo(dto.getTipo());
+        mp.setCapacidadMaxima(dto.getCapacidadMaxima());
+        mp.setNivelActual(dto.getNivelActual() != null ? dto.getNivelActual() : 0.0);
+        mp.setUnidad(dto.getUnidad() != null ? dto.getUnidad() : "L");
+        mp.setUmbralCritico(dto.getUmbralCritico());
+        mp.setUmbralAlerta(dto.getUmbralAlerta());
+        mp.setCostoPorUnidad(dto.getCostoPorUnidad());
+        mp.setUbicacion(dto.getUbicacion());
+        mp.setCreatedAt(LocalDateTime.now());
+        mp.setUpdatedAt(LocalDateTime.now());
+
+        MateriaPrima saved = materiaPrimaRepo.save(mp);
+        return convertToDTO(saved);
+    }
+
+    // En MateriaPrimaService.java - Agregar estos métodos
+
+    // Actualizar materia prima
+    @Transactional
+    public MateriaPrimaDTO actualizarMateriaPrima(Long id, MateriaPrimaDTO dto) {
+        MateriaPrima mp = materiaPrimaRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Materia prima no encontrada"));
+
+        // Validar que no exista otra materia prima con el mismo código (excepto la
+        // actual)
+        if (!mp.getCodigo().equals(dto.getCodigo()) &&
+                materiaPrimaRepo.findByCodigo(dto.getCodigo()).isPresent()) {
+            throw new RuntimeException("Ya existe una materia prima con el código: " + dto.getCodigo());
+        }
+
+        mp.setCodigo(dto.getCodigo());
+        mp.setNombre(dto.getNombre());
+        mp.setTipo(dto.getTipo());
+        mp.setCapacidadMaxima(dto.getCapacidadMaxima());
+        mp.setNivelActual(dto.getNivelActual() != null ? dto.getNivelActual() : mp.getNivelActual());
+        mp.setUnidad(dto.getUnidad() != null ? dto.getUnidad() : "L");
+        mp.setUmbralCritico(dto.getUmbralCritico());
+        mp.setUmbralAlerta(dto.getUmbralAlerta());
+        mp.setCostoPorUnidad(dto.getCostoPorUnidad());
+        mp.setUbicacion(dto.getUbicacion());
+
+        MateriaPrima saved = materiaPrimaRepo.save(mp);
+        return convertToDTO(saved);
+    }
+
+    // Eliminar materia prima
+    @Transactional
+    public void eliminarMateriaPrima(Long id) {
+        MateriaPrima mp = materiaPrimaRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Materia prima no encontrada"));
+
+        // Verificar si tiene fórmulas asociadas antes de eliminar
+        if (mp.getFormulas() != null && !mp.getFormulas().isEmpty()) {
+            throw new RuntimeException("No se puede eliminar la materia prima porque tiene fórmulas asociadas");
+        }
+
+        materiaPrimaRepo.delete(mp);
+    }
+
 }
