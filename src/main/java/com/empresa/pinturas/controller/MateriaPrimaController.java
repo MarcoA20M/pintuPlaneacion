@@ -69,4 +69,25 @@ public class MateriaPrimaController {
     public ResponseEntity<List<MovimientoInventario>> obtenerMovimientos(@PathVariable Long id) {
         return ResponseEntity.ok(service.obtenerMovimientos(id));
     }
+
+    // En MateriaPrimaController.java - Agregar este método
+
+    // Crear nueva materia prima
+    @PostMapping
+    public ResponseEntity<MateriaPrimaDTO> crearMateriaPrima(@RequestBody MateriaPrimaDTO dto) {
+        return ResponseEntity.ok(service.crearMateriaPrima(dto));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<MateriaPrimaDTO> actualizarMateriaPrima(@PathVariable Long id,
+            @RequestBody MateriaPrimaDTO dto) {
+        return ResponseEntity.ok(service.actualizarMateriaPrima(id, dto));
+    }
+
+    // 🔴 ELIMINAR materia prima
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarMateriaPrima(@PathVariable Long id) {
+        service.eliminarMateriaPrima(id);
+        return ResponseEntity.noContent().build();
+    }
 }
