@@ -1,8 +1,11 @@
+// com.empresa.pinturas.service.ConsumoService.java
 package com.empresa.pinturas.service;
 
 import com.empresa.pinturas.model.Consumo;
 import com.empresa.pinturas.repository.ConsumoRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,5 +24,11 @@ public class ConsumoService {
 
     public Double getConsumoTotalDesde(String materiaPrimaCodigo, LocalDateTime desde) {
         return consumoRepository.sumConsumosByMateriaPrimaDesde(materiaPrimaCodigo, desde);
+    }
+
+    // 🔴 GUARDAR MÚLTIPLES CONSUMOS
+    @Transactional
+    public List<Consumo> guardarConsumos(List<Consumo> consumos) {
+        return consumoRepository.saveAll(consumos);
     }
 }
