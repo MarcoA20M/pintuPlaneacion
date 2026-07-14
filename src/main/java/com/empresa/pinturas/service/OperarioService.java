@@ -32,7 +32,7 @@ public class OperarioService {
     
     public List<Operario> getEsmaltes() {
         return operarioRepository.findByAreaAndActivoTrue("esmaltes");
-    }
+    }   
     
     public List<Operario> getEspeciales() {
         return operarioRepository.findByAreaAndActivoTrue("especial");
