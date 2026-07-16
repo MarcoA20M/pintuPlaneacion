@@ -22,7 +22,6 @@ import com.empresa.pinturas.repository.FamiliaRepository;
 
 @RestController
 @RequestMapping("/api/familias")
-@CrossOrigin(origins = "http://localhost:3000")
 public class FamiliaController {
 
     private final FamiliaRepository familiaRepository;
