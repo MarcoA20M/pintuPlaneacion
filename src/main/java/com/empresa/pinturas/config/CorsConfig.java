@@ -18,19 +18,12 @@ public class CorsConfig {
 
                 registry.addMapping("/**")
                         .allowedOrigins(
-                            "https://frontend-planeacion-vert.vercel.app",
-                            "http://localhost:3000"
+                                "https://frontend-planeacion-vert.vercel.app",
+                                "http://localhost:3000"
                         )
-                        .allowedMethods(
-                            "GET",
-                            "POST",
-                            "PUT",
-                            "DELETE",
-                            "PATCH",
-                            "OPTIONS"
-                        )
+                        .allowedMethods("*")
                         .allowedHeaders("*")
-                        .allowCredentials(true);
+                        .allowCredentials(false);
             }
         };
     }
