@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class PinturasApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(PinturasApplication.class, args);
+		SpringApplication.run(PinturasApplication.class, args);	
 	}	
 
 }	
